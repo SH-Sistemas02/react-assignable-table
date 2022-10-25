@@ -5,19 +5,19 @@ import Table from "./Table";
 
 import "bootstrap/dist/css/bootstrap.min.css";
 
-const ButtonCell = <T extends object>(props: CellProps<T> & {
-  updateData?: (rowIndex: number, columnId: string, value: any) => void
-}) => {
+const ButtonCell = <T extends object>(
+  props: CellProps<T> & {
+    updateData?: (rowIndex: number, columnId: string, value: any) => void;
+  }
+) => {
   const { column, row, value, updateData } = props;
+  const handleClick = () => {
+    updateData?.(row.index, "assigned", Math.ceil(Math.random() * 10));
+    updateData?.(row.index, "generated", "Ok");
+  };
 
   return (
-    <Button
-      size="sm"
-      onClick={() => {
-        updateData?.(row.index, "assigned", Math.ceil(Math.random() * 10));
-        updateData?.(row.index, "generated", "Ok");
-      }}
-    >
+    <Button size="sm" onClick={handleClick}>
       Assign
     </Button>
   );
