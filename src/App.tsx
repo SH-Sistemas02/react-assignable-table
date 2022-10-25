@@ -1,19 +1,19 @@
-import { useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { CellProps, Column } from "react-table";
-import { Button, Container } from "react-bootstrap";
-import Table from "./Table";
+import { Button, Container, Modal } from "react-bootstrap";
+import ReubicacionTable from "./ReubicacionTable";
 
 import "bootstrap/dist/css/bootstrap.min.css";
 
 const ButtonCell = <T extends object>(
   props: CellProps<T> & {
     updateData?: (rowIndex: number, columnId: string, value: any) => void;
+    reallocate?: (id: string) => void;
   }
 ) => {
-  const { column, row, value, updateData } = props;
+  const { column, row, value, updateData, reallocate } = props;
   const handleClick = () => {
-    updateData?.(row.index, "assigned", Math.ceil(Math.random() * 10));
-    updateData?.(row.index, "generated", "Ok");
+    reallocate?.(row.id);
   };
 
   return (
@@ -24,6 +24,9 @@ const ButtonCell = <T extends object>(
 };
 
 export default function App() {
+  const [reallocating, setReallocating] = useState<string | number | null>(
+    null
+  );
   const columns: Column<any>[] = useMemo(
     () => [
       {
@@ -58,6 +61,10 @@ export default function App() {
     []
   );
 
+  const getRowId = useCallback((row: any) => {
+    return row.id;
+  }, []);
+
   const [data, setData] = useState<any[]>([]);
   const [skipPageReset, setSkipPageReset] = useState(false);
 
@@ -77,6 +84,10 @@ export default function App() {
         );
       });
   }, []);
+
+  const reallocate = (id: string) => {
+    setReallocating(id);
+  };
 
   const updateData = (rowIndex: number, columnId: any, value: any) => {
     setSkipPageReset(true);
@@ -101,12 +112,27 @@ export default function App() {
   return (
     <div className="App">
       <Container>
-        <Table
+        <ReubicacionTable
           columns={columns}
           data={data}
+          getRowId={getRowId}
           updateData={updateData}
+          reallocate={reallocate}
           skipPageReset={skipPageReset}
         />
+
+        <Modal
+          size="sm"
+          show={!!reallocating}
+          onHide={() => setReallocating(null)}
+        >
+          <Modal.Header closeButton>
+            <Modal.Title>{reallocating}'s data</Modal.Title>
+          </Modal.Header>
+
+          <Modal.Body>
+          </Modal.Body>
+        </Modal>
       </Container>
     </div>
   );
