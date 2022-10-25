@@ -5,16 +5,19 @@ import Table from "./Table";
 
 import "bootstrap/dist/css/bootstrap.min.css";
 
-const ButtonCell = <T extends object>(props: CellProps<T>) => {
+const ButtonCell = <T extends object>(
+  props: CellProps<T> & {
+    updateData?: (rowIndex: number, columnId: string, value: any) => void;
+  }
+) => {
   const { column, row, value, updateData } = props;
+  const handleClick = () => {
+    updateData?.(row.index, "assigned", Math.ceil(Math.random() * 10));
+    updateData?.(row.index, "generated", "Ok");
+  };
 
   return (
-    <Button
-      size="sm"
-      onClick={() =>
-        updateData(row.index, "assigned", Math.ceil(Math.random() * 10))
-      }
-    >
+    <Button size="sm" onClick={handleClick}>
       Assign
     </Button>
   );
@@ -25,28 +28,32 @@ export default function App() {
     () => [
       {
         accessor: "name",
-        Header: "Color"
+        Header: "Color",
       },
       {
         accessor: "year",
-        Header: "Year"
+        Header: "Year",
       },
       {
         accessor: "color",
-        Header: "Code"
+        Header: "Code",
       },
       {
         accessor: "pantone_value",
-        Header: "Pantone"
+        Header: "Pantone",
       },
       {
         accessor: "id",
-        Cell: ButtonCell
+        Cell: ButtonCell,
       },
       {
         accessor: "assigned",
-        Header: "Assigned"
-      }
+        Header: "Assigned",
+      },
+      {
+        accessor: "generated",
+        Header: "Generated",
+      },
     ],
     []
   );
@@ -63,7 +70,8 @@ export default function App() {
           body.data.map((item, i) => {
             return {
               ...item,
-              assigned: null
+              assigned: null,
+              generated: null,
             };
           })
         );
@@ -80,7 +88,7 @@ export default function App() {
 
         return {
           ...row,
-          [columnId]: value
+          [columnId]: value,
         };
       });
     });
