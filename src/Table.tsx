@@ -1,4 +1,4 @@
-import { Column, IdType, Row, usePagination, useTable } from "react-table";
+import { Column, Row, usePagination, useTable } from "react-table";
 import BTable from "react-bootstrap/Table";
 import Pagination from "react-bootstrap/Pagination";
 import { useEffect } from "react";
@@ -31,7 +31,7 @@ export default function Table<T extends object = any>(props: TableProps<T>) {
     pageCount: controlledPageCount,
     skipPageReset,
     getRowId,
-    updateData
+    updateData,
   } = props;
 
   const {
@@ -46,7 +46,7 @@ export default function Table<T extends object = any>(props: TableProps<T>) {
     gotoPage,
     nextPage,
     previousPage,
-    state: { pageIndex, pageSize }
+    state: { pageIndex, pageSize },
   } = useTable(
     {
       columns,
@@ -55,7 +55,7 @@ export default function Table<T extends object = any>(props: TableProps<T>) {
       pageCount: controlledPageCount,
       autoResetPage: !skipPageReset,
       getRowId,
-      updateData
+      updateData,
     },
     usePagination
   );
@@ -67,7 +67,7 @@ export default function Table<T extends object = any>(props: TableProps<T>) {
 
     fetchData?.({
       page: pageIndex,
-      pageSize
+      pageSize,
     });
   }, [controlledPaging, fetchData, pageIndex, pageSize]);
 
