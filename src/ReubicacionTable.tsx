@@ -3,7 +3,7 @@ import BTable from "react-bootstrap/Table";
 import Pagination from "react-bootstrap/Pagination";
 import { useEffect } from "react";
 
-export interface TableProps<T extends object> {
+export interface ReubicacionTableProps<T extends object> {
   columns: Column<T>[];
   data: T[];
   controlledPaging?: boolean;
@@ -20,9 +20,13 @@ export interface TableProps<T extends object> {
   updateData?: {
     (rowIndex: number, columnId: keyof T, value: any): void;
   };
+
+  reallocate?: {
+    (id: string): void;
+  };
 }
 
-export default function Table<T extends object = any>(props: TableProps<T>) {
+export default function ReubicacionTable<T extends object = any>(props: ReubicacionTableProps<T>) {
   const {
     columns,
     data,
@@ -32,6 +36,7 @@ export default function Table<T extends object = any>(props: TableProps<T>) {
     skipPageReset,
     getRowId,
     updateData,
+    reallocate,
   } = props;
 
   const {
@@ -56,6 +61,7 @@ export default function Table<T extends object = any>(props: TableProps<T>) {
       autoResetPage: !skipPageReset,
       getRowId,
       updateData,
+      reallocate,
     },
     usePagination
   );
